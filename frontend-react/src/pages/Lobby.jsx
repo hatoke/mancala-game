@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 import "../assets/style/Lobby.scss";
 
 import LobbyItem from "../components/LobbyItem";
@@ -16,6 +17,10 @@ function Lobby() {
       status: "public",
     },
   ]);
+
+  useEffect(() => {
+    const socket = io("ws://localhost:3000");
+  }, []);
 
   const renderLobbyList = () => {
     return lobbyList.map((lobby, index) => {
