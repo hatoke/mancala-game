@@ -1,0 +1,14 @@
+.lobbies {
+    display: flex;
+    flex-direction: column;
+
+    span {
+        margin-bottom: 20px;
+    }
+
+    .lobby-list {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+}

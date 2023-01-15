@@ -1,0 +1,18 @@
+.lobby-item {
+    padding: 15px 10px;
+    border-radius: 10px;
+    background-color: #ddd;
+    color: #333;
+    margin: 0 10px 0 10px;
+    width: 100%;
+    max-width: 200px;
+    cursor: pointer;
+
+    h1 {
+        font-size: 24px;
+        margin: 0 0 10px;
+        padding: 0;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
