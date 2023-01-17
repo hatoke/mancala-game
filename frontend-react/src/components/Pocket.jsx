@@ -6,10 +6,10 @@ function RenderStone({ stone }) {
   }
 }
 
-function Pit({ stone, pitSelection }) {
+function Pocket({ stone, clickEvent }) {
   const clickHandle = () => {
-    if (pitSelection) {
-      pitSelection();
+    if (clickEvent) {
+      clickEvent();
     }
   };
 
@@ -20,4 +20,4 @@ function Pit({ stone, pitSelection }) {
   );
 }
 
-export default Pit;
+export default Pocket;
