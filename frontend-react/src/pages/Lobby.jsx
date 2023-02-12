@@ -1,38 +1,62 @@
-import { useState, useEffect } from "react";
-import { io } from "socket.io-client";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import Modal from "../components/Modal";
+import { SocketContext } from "../context/socket.context";
+import LobbyItem from "../components/LobbyItem";
 import "../assets/style/Lobby.scss";
 
-import LobbyItem from "../components/LobbyItem";
+function RenderLobbyList({ lobbyList }) {
+  if (Object.keys(lobbyList).length > 0) {
+    return Object.keys(lobbyList).map((lobby, index) => {
+      return <LobbyItem key={index} lobby={lobbyList[lobby]} />;
+    });
+  }
+}
 
 function Lobby() {
-  const [lobbyList, setLobbyList] = useState([
-    {
-      id: 1,
-      name: "Lorem Ipsum Dolor",
-      status: "private",
-    },
-    {
-      id: 2,
-      name: "Public Mancala Room",
-      status: "public",
-    },
-  ]);
+  const socket = useContext(SocketContext);
+  const [lobbyList, setLobbyList] = useState({});
+  const [lobby, setLobby] = useState({ lobbyName: "" });
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const socket = io("ws://localhost:3000");
+    socket.emit("lobbyRoom");
+
+    socket.on("lobbyList", (args) => {
+      setLobbyList({ ...args });
+    });
+
+    socket.on("enterLobby", (args) => {
+      const { status, id } = args;
+      if (status) {
+        navigate(`/mancala/${args.id}`);
+      }
+    });
   }, []);
 
-  const renderLobbyList = () => {
-    return lobbyList.map((lobby, index) => {
-      const { id, name, status } = lobby;
-      return <LobbyItem key={index} id={id} name={name} status={status} />;
-    });
+  const createLobby = () => {
+    socket.emit("createLobby", lobby);
   };
 
   return (
     <div className="lobbies">
-      <span>Lobby</span>
-      <div className="lobby-list">{renderLobbyList()}</div>
+      <h1>Lobby List</h1>
+      <div>
+        <input
+          type="text"
+          onChange={(e) => {
+            setLobby((current) => {
+              return {
+                lobbyName: e.target.value,
+              };
+            });
+          }}
+        />
+        <button onClick={createLobby}>Yeni Lobi Oluştur</button>
+      </div>
+      <div className="lobby-list">
+        <RenderLobbyList lobbyList={lobbyList} />
+      </div>
     </div>
   );
 }

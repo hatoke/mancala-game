@@ -7,6 +7,12 @@
     width: 100%;
     max-width: 200px;
     cursor: pointer;
+    transition: 200ms all ease;
+    text-decoration: none;    
+
+    &:hover {
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 1);
+    }
 
     h1 {
         font-size: 24px;
@@ -14,5 +20,26 @@
         padding: 0;
         white-space: nowrap;
         overflow: hidden;
+    }
+
+    .lobby-detail {
+        display: flex;
+        justify-content: space-between;
+
+        span {
+            margin: 0;
+        }
+
+        .player-count {
+            font-weight: bold;
+        }
+
+        .active-player {
+            color: green;
+        }
+
+        .passive-player {
+            color: red;
+        }
     }
 }

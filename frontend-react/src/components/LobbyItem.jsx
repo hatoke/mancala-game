@@ -1,27 +1,25 @@
 import { useNavigate } from "react-router-dom";
-import '../assets/style/components/LobbyItem.scss'
+import { Link } from "react-router-dom";
+import "../assets/style/components/LobbyItem.scss";
 
 function LobbyItem(props) {
-  const { id, name, status } = props;
+  const { id, lobbyName, lobbyStatus, lobbyPlayerCount } = props.lobby;
   const navigate = useNavigate();
 
   const navigateLobby = () => {
     navigate(`/mancala/${id}`);
   };
 
-  const statusElement = () => {
-    return (
-      <div>
-        <span>{status}</span>
-      </div>
-    );
-  };
-
   return (
-    <div className="lobby-item" onClick={navigateLobby}>
-      <h1>{name}</h1>
-      {statusElement()}
-    </div>
+    <Link className="lobby-item" to={`/mancala/${id}`}>
+      <div onClick={navigateLobby}>
+        <h1>{lobbyName}</h1>
+        <div className="lobby-detail">
+          <span>{lobbyStatus}</span>
+          <span className={`player-count ${lobbyPlayerCount < 2 ? "active-player" : "passive-count"}`}>2 / {lobbyPlayerCount}</span>
+        </div>
+      </div>
+    </Link>
   );
 }
 

@@ -12,6 +12,7 @@
   "author": "Berkay UZUN",
   "license": "MIT",
   "dependencies": {
+    "hashids": "^2.2.10",
     "nodemon": "^2.0.20",
     "socket.io": "^4.5.4"
   }
