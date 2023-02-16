@@ -10,6 +10,10 @@ const io = new Server(3000, {
   },
 });
 
+function sendPlayerCount() {
+  io.emit("playerCount", { count: Object.keys(playerList).length });
+}
+
 function removeLobby(lobbyId) {
   delete lobbylist[lobbyId];
 }
@@ -26,12 +30,13 @@ function decreasePlayerCount(lobbyId) {
 io.on("connection", (socket) => {
   const socketId = socket.id;
   playerList[socketId] = "";
+  console.log(playerList);
+  sendPlayerCount();
   console.log(`${socket.id} connected`);
 
   socket.on("gameEvent", (...args) => {
     const { id, pocketDetails } = args[0];
     const { opponentsPocket, playerPits, opponentsPits, playerPocket } = pocketDetails;
-    console.log("player list is ", playerList);
     const nextPlayer = Object.keys(playerList).filter((key, index) => {
       if (playerList[key] == id && socket.id !== key) {
         return key;
@@ -99,6 +104,8 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     const socketId = socket.id;
     const lobbyId = playerList[socketId];
+    delete playerList[socketId];
     decreasePlayerCount(lobbyId);
+    sendPlayerCount();
   });
 });

@@ -1,3 +1,5 @@
+@import "./color";
+
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -13,4 +15,94 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.btn {
+  width: auto;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  color: $lightPit;
+  font-weight: 500;
+  transition: 200ms all ease;
+  cursor: pointer;
+  user-select: none !important;
+}
+
+.btn-orange {
+  background-color: $darkPit;
+
+  &:hover {
+    background-color: darken($darkPit, 5%);
+  }
+}
+
+@for $i from 1 through 50 {
+  .mt-#{$i} {
+    margin-top: #{$i}px !important;
+  }
+
+  .mb-#{$i} {
+    margin-bottom: #{$i}px !important;
+  }
+
+  .mr-#{$i} {
+    margin-right: #{$i}px !important;
+  }
+
+  .ml-#{$i} {
+    margin-left: #{$i}px !important;
+  }
+}
+
+.flex {
+  display: flex !important;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.a-items-center {
+  align-items: center !important;
+}
+
+.j-content-center {
+  justify-content: center;
+}
+
+.how-to-play {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  user-select: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  transition: 200ms all ease;
+
+  &:hover {
+    background-color: darken($darkPit, 20%);
+  }
+}
+
+.block {
+  display: block;
+}
+
+.game-player-count {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+
+  span {
+    display: block;
+  }
 }
