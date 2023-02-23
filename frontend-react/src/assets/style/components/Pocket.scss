@@ -30,7 +30,7 @@ $pocketSize: 160px;
 
     &:before {
         position: absolute;
-        z-index: 500;
+        z-index: 20;
         bottom: -40px;
         left: 50%;
         transform: translateX(-50%);
