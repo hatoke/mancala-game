@@ -20,11 +20,13 @@ function removeLobby(lobbyId) {
 
 function decreasePlayerCount(lobbyId) {
   if (lobbylist[lobbyId] && lobbylist[lobbyId].lobbyPlayerCount - 1 >= 0) {
-    lobbylist[lobbyId].lobbyPlayerCount -= 1;
-  } else if (lobbylist[lobbyId] && lobbylist[lobbyId].lobbyPlayerCount - 1 <= -1) {
-    removeLobby();
+    if (lobbylist[lobbyId].lobbyPlayerCount - 1 == 0) {
+      removeLobby(lobbyId);
+    } else {
+      lobbylist[lobbyId].lobbyPlayerCount -= 1;
+    }
+    io.to("lobbyRoom").emit("lobbyList", { ...lobbylist });
   }
-  io.to("lobbyRoom").emit("lobbyList", { ...lobbylist });
 }
 
 io.on("connection", (socket) => {
@@ -46,9 +48,9 @@ io.on("connection", (socket) => {
       opponentsPocket: playerPocket,
       playerPocket: opponentsPocket,
       playerPits: opponentsPits,
-      opponentsPits: playerPits,
+      opponentsPits: playerPits.reverse(),
     };
-    io.to(nextPlayer).emit("gameEvent", { board: reSendEvent });
+    io.to(nextPlayer).emit("gameEvent", { activePlayer: "PLAYER", board: reSendEvent });
   });
 
   socket.on("createLobby", async (...args) => {
