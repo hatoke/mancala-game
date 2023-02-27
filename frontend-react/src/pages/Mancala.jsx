@@ -3,13 +3,55 @@ import { useNavigate } from "react-router-dom";
 import { SocketContext } from "../context/socket.context";
 import { useParams } from "react-router-dom";
 import Pocket from "../components/Pocket";
+import Modal from "../components/Modal";
 import "../assets/style/mancala.scss";
+
+function PasswordModal({ id, lobbyStatus }) {
+  console.log("lobbyStatus is ", lobbyStatus);
+  const socket = useContext(SocketContext);
+  const [lobbyPassword, setLobbyPassword] = useState("");
+  const [modalOptions, setModalOptions] = useState({
+    show: lobbyStatus,
+    overlay: false,
+  });
+
+  useEffect(() => {
+    setModalOptions((state) => ({ ...state, show: lobbyStatus }));
+  }, [lobbyStatus]);
+
+  const modalShowToggle = () => {
+    setModalOptions((modal) => ({ ...modal, show: !modal.show }));
+  };
+
+  const lobbyJoin = () => {
+    if (lobbyPassword.length > 0) {
+      socket.emit("lobbyJoin", { id, password: lobbyPassword });
+    } else {
+      alert("Password cannot be empty");
+    }
+  };
+
+  return (
+    <Modal show={modalOptions.show} setShow={modalShowToggle} headText={modalOptions.headText}>
+      <div className="lobby-form">
+        <div className="form-item">
+          <span>Lobby Password</span>
+          <input type="text" onChange={(e) => setLobbyPassword(e.target.value)} />
+        </div>
+        <div className="btn btn-orange w-100" onClick={() => lobbyJoin()}>
+          <span>Join Lobby</span>
+        </div>
+      </div>
+    </Modal>
+  );
+}
 
 function Mancala() {
   const { id } = useParams();
   const navigate = useNavigate();
   const socket = useContext(SocketContext);
 
+  const [lobbyStatus, setLobbyStatus] = useState(false);
   const [lobbyConnection, setLobbyConnection] = useState(false);
   const [prediction, setPrediction] = useState({});
   const [pocketDetails, setPocket] = useState({
@@ -64,19 +106,41 @@ function Mancala() {
 
   useEffect(() => {
     socket.emit("lobbyJoin", { id });
-    socket.on("userJoined", ({ status, message, socketId }) => {
-      if (!status) {
-        alert("Lobi dolu");
-        navigate("/");
+    socket.on("userJoined", ({ status, statusCode, message }) => {
+      const wrongPass = () => {
+        alert("Password wrong, please try again");
+      };
+      const statusList = {
+        200: () => {
+          setLobbyStatus(false);
+          setLobbyConnection(true);
+        },
+        403: () => {
+          if (lobbyStatus) {
+            wrongPass();
+          }
+          setLobbyStatus(true);
+        },
+        404: () => {
+          alert("Loby not found");
+          navigate("/");
+        },
+      };
+      if (statusList[statusCode]) {
+        statusList[statusCode]();
       } else {
-        setLobbyConnection(true);
+        alert("Something went wrong but idk");
       }
     });
     socket.on("gameEvent", ({ activePlayer, board }) => {
       if (board) {
+        console.log("boar is ", board);
         setPocket(board);
       }
-      setActivePlayer(activePlayer);
+      if (activePlayer) {
+        console.log("active player is ", activePlayer);
+        setActivePlayer(activePlayer);
+      }
     });
     return () => leavePage();
   }, [id]);
@@ -153,6 +217,7 @@ function Mancala() {
   };
 
   const renderPocket = ({ side, pocket, clickEvent }) => {
+    // TODO mouseOver tint
     const sendMouseEvent = (index, stone, eventType) => {
       if (eventType == "LEAVE") {
         clearSelection();
@@ -196,6 +261,7 @@ function Mancala() {
 
   return (
     <div className="mancala-game">
+      <PasswordModal id={id} lobbyStatus={lobbyStatus} />
       <span>Mancala</span>
       <div className="invite-link" onClick={copyInviteLink} href="http://localhost:5173/mancala/2">
         <h1>/mancala/2</h1>
