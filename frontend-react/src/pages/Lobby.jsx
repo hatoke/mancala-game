@@ -48,7 +48,20 @@ function Lobby() {
   };
 
   const createLobby = () => {
-    socket.emit("createLobby", lobby);
+    // TODO maybe need refactor with input validation lib
+    if (lobby.lobbyName.length > 3) {
+      if (lobby.lobbyStatus === "PUBLIC") {
+        socket.emit("createLobby", lobby);
+      } else if (lobby.lobbyStatus === "PRIVATE") {
+        if (lobby.lobbyPassword.length > 3) {
+          socket.emit("createLobby", lobby);
+        } else {
+          alert("Lobby password cannot be shorter than 3 characters");
+        }
+      }
+    } else {
+      alert("Lobby name cannot be shorter than 3 characters");
+    }
   };
 
   const modalShowToggle = () => {
@@ -59,12 +72,8 @@ function Lobby() {
     <div className="lobbies">
       <Modal show={modalOptions.show} setShow={modalShowToggle} headText={modalOptions.headText}>
         <div className="lobby-form">
-          <div className="form-item">
-            <span>Lobby Name</span>
-            <input type="text" onChange={(e) => setLobbyForm(e, "lobbyName")} />
-          </div>
-          <div className="form-item">
-            <span>Lobby Status</span>
+          <div className="form-item mb-10">
+            <span className="mb-5">Lobby Status</span>
             <div>
               <label htmlFor="public" className="mr-30">
                 <input name="lobbyStatus" checked={lobby.lobbyStatus === "PUBLIC"} value={"PUBLIC"} id="public" type="radio" onChange={(e) => setLobbyForm(e, "lobbyStatus")} />
@@ -75,6 +84,10 @@ function Lobby() {
                 <span>Private</span>
               </label>
             </div>
+          </div>
+          <div className="form-item">
+            <span>Lobby Name</span>
+            <input type="text" onChange={(e) => setLobbyForm(e, "lobbyName")} />
           </div>
           {lobby.lobbyStatus === "PRIVATE" && (
             <>

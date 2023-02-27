@@ -4,7 +4,7 @@
     box-sizing: border-box; // 1
 }
 
-.center{
+.center {
     text-align: center;
     margin: 0 auto;
 }
@@ -23,6 +23,12 @@
             align-items: flex-start;
             justify-content: center;
             margin-bottom: 15px;
+
+            span {
+                &:first-child {
+                    font-weight: 600;
+                }
+            }
 
             input[type="text"],
             input[type="password"] {

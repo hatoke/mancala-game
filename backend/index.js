@@ -64,6 +64,7 @@ io.on("connection", (socket) => {
         lobbyStatus: lobbyPassword ? "PRIVATE" : "PUBLIC",
         lobbyPlayerCount: 0,
       };
+      console.log("new lobby is ", newLobby);
       lobbylist[newLobby.id] = newLobby;
       socket.emit("enterLobby", { status: true, id });
       io.to("lobbyRoom").emit("lobbyList", { ...lobbylist });
@@ -72,19 +73,32 @@ io.on("connection", (socket) => {
     }
   });
 
+  const join = (id) => {
+    socket.join(id);
+    playerList[socket.id] = id;
+    lobbylist[id].lobbyPlayerCount += 1;
+    if (lobbylist[id].lobbyPlayerCount == 2) {
+      io.to(socket.id).emit("gameEvent", { activePlayer: "OPPONENT", board: false });
+    }
+    io.to("lobbyRoom").emit("lobbyList", { ...lobbylist });
+    io.to(id).emit("userJoined", { status: true, statusCode: 200, message: "player joined to lobby", socketId });
+  };
+
   socket.on("lobbyJoin", (...args) => {
-    const { id } = args[0];
+    const { id, password } = args[0];
+    console.log("password id ", password);
     if (lobbylist[id] && lobbylist[id].lobbyPlayerCount < 2) {
-      lobbylist[id].lobbyPlayerCount += 1;
-      if (lobbylist[id].lobbyPlayerCount == 2) {
-        io.to(socket.id).emit("gameEvent", { activePlayer: "OPPONENT", board: false });
+      if (lobbylist[id].lobbyStatus === "PUBLIC") {
+        join(id);
+      } else if (lobbylist[id].lobbyStatus === "PRIVATE") {
+        if (password && lobbylist[id].lobbyPassword) {
+          join(id);
+        } else {
+          socket.emit("userJoined", { status: false, statusCode: 403, message: "lobby password wrong" });
+        }
       }
-      socket.join(id);
-      playerList[socket.id] = id;
-      io.to("lobbyRoom").emit("lobbyList", { ...lobbylist });
-      io.to(id).emit("userJoined", { status: true, message: "player joined to lobby", socketId });
     } else {
-      socket.emit("userJoined", { status: false, message: "lobby not found" });
+      socket.emit("userJoined", { status: false, statusCode: 404, message: "lobby not found or lobby full" });
     }
   });
 
