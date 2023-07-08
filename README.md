@@ -32,6 +32,7 @@
   
 ## Roadmap
 
+- [ ] Ui/Ux improvement
 - [ ] Game start with player ready status
 - [ ] In game chat
 - [ ] Save player move and show last move top right corner
