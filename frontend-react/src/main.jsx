@@ -10,7 +10,7 @@ import Modal from "./components/Modal";
 function HowToPlay() {
   const [rulesModal, setRulesModal] = useState({
     show: false,
-    overlay: false,
+    overlay: true,
   });
 
   const modalShowToggle = () => {
@@ -19,7 +19,7 @@ function HowToPlay() {
 
   return (
     <>
-      <Modal show={rulesModal.show} setShow={modalShowToggle}>
+      <Modal show={rulesModal.show} setShow={modalShowToggle} overlay={rulesModal.overlay}>
         <h1>How To Play</h1>
         <p className="block mb-15">Mancala is a two-player stone game played with a board and various numbers of stones. The objective of the game is to collect more stones than your opponent.</p>
         <ul className="mb-15">

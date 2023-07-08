@@ -17,7 +17,7 @@ function Lobby() {
   const socket = useContext(SocketContext);
   const [modalOptions, setModalOptions] = useState({
     show: false,
-    overlay: false,
+    overlay: true,
   });
   const [lobbyList, setLobbyList] = useState({});
   const [lobby, setLobby] = useState({ lobbyName: "", lobbyStatus: "PUBLIC", lobbyPassword: "" });
@@ -55,8 +55,6 @@ function Lobby() {
       } else if (lobby.lobbyStatus === "PRIVATE") {
         if (lobby.lobbyPassword.length > 3) {
           socket.emit("createLobby", lobby);
-        } else {
-          alert("Lobby password cannot be shorter than 3 characters");
         }
       }
     } else {
@@ -70,7 +68,7 @@ function Lobby() {
 
   return (
     <div className="lobbies">
-      <Modal show={modalOptions.show} setShow={modalShowToggle} headText={modalOptions.headText}>
+      <Modal show={modalOptions.show} setShow={modalShowToggle} headText={modalOptions.headText} overlay={modalOptions.overlay}>
         <div className="lobby-form">
           <div className="form-item mb-10">
             <span className="mb-5">Lobby Status</span>
@@ -93,7 +91,7 @@ function Lobby() {
             <>
               <div className="form-item">
                 <span>Lobby Password</span>
-                <input type="password" onChange={(e) => setLobbyForm(e, "lobbyPassword")} />
+                <input className="lobby-password" type="text" onChange={(e) => setLobbyForm(e, "lobbyPassword")} />
               </div>
             </>
           )}

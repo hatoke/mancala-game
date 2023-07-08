@@ -32,7 +32,6 @@ function decreasePlayerCount(lobbyId) {
 io.on("connection", (socket) => {
   const socketId = socket.id;
   playerList[socketId] = "";
-  console.log(playerList);
   sendPlayerCount();
   console.log(`${socket.id} connected`);
 
@@ -79,6 +78,7 @@ io.on("connection", (socket) => {
     lobbylist[id].lobbyPlayerCount += 1;
     if (lobbylist[id].lobbyPlayerCount == 2) {
       io.to(socket.id).emit("gameEvent", { activePlayer: "OPPONENT", board: false });
+      io.to(id).emit("playerStatus", { status: true, statusCode: 200, message: "all player joined" });
     }
     io.to("lobbyRoom").emit("lobbyList", { ...lobbylist });
     io.to(id).emit("userJoined", { status: true, statusCode: 200, message: "player joined to lobby", socketId });

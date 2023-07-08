@@ -33,3 +33,43 @@
         padding: 20px;
     }
 }
+
+.lobby-form {
+    display: flex;
+    flex-direction: column;
+
+    .form-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        margin-bottom: 15px;
+
+        span {
+            &:first-child {
+                font-weight: 600;
+            }
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+        }
+
+        .lobby-password {
+            -webkit-text-security: disc;
+        }
+
+        input[type="radio"] {
+            & ~ span {
+                user-select: none !important;
+            }
+        }
+    }
+}

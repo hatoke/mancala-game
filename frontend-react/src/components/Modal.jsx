@@ -1,6 +1,6 @@
 import "../assets/style/components/Modal.scss";
 
-function Modal({ show, setShow, status, headText, children }) {
+function Modal({ show, setShow, overlay, status, headText, children }) {
   if (!show) {
     return null;
   }
@@ -12,7 +12,9 @@ function Modal({ show, setShow, status, headText, children }) {
   };
 
   const closeModal = () => {
-    setShow();
+    if (overlay) {
+      setShow();
+    }
   };
 
   return (

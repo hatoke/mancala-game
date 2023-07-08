@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../assets/style/components/LobbyItem.scss";
 
 function LobbyItem(props) {
