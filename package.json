@@ -11,7 +11,7 @@
   },
   "author": "Berkay UZUN",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "concurrently": "^7.6.0"
   }
 }

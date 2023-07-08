@@ -7,9 +7,8 @@ import Modal from "../components/Modal";
 import "../assets/style/mancala.scss";
 
 function PasswordModal({ id, lobbyStatus }) {
-  console.log("lobbyStatus is ", lobbyStatus);
   const socket = useContext(SocketContext);
-  const [lobbyPassword, setLobbyPassword] = useState("");
+  const [lobbyPassword, setLobbyPassword] = useState("");  
   const [modalOptions, setModalOptions] = useState({
     show: lobbyStatus,
     overlay: false,
@@ -32,11 +31,11 @@ function PasswordModal({ id, lobbyStatus }) {
   };
 
   return (
-    <Modal show={modalOptions.show} setShow={modalShowToggle} headText={modalOptions.headText}>
+    <Modal show={modalOptions.show} overlay={modalOptions.overlay} setShow={modalShowToggle} headText={modalOptions.headText}>
       <div className="lobby-form">
         <div className="form-item">
           <span>Lobby Password</span>
-          <input type="text" onChange={(e) => setLobbyPassword(e.target.value)} />
+          <input className="lobby-password" type="text" onChange={(e) => setLobbyPassword(e.target.value)} />
         </div>
         <div className="btn btn-orange w-100" onClick={() => lobbyJoin()}>
           <span>Join Lobby</span>
@@ -53,6 +52,7 @@ function Mancala() {
 
   const [lobbyStatus, setLobbyStatus] = useState(false);
   const [lobbyConnection, setLobbyConnection] = useState(false);
+  const [playersReady, setPlayerReady] = useState(false);
   const [prediction, setPrediction] = useState({});
   const [pocketDetails, setPocket] = useState({
     opponentsPocket: {
@@ -151,7 +151,7 @@ function Mancala() {
       OPPONENT: "PLAYER",
     };
 
-    if (activePlayer === "PLAYER") {
+    if (activePlayer === "PLAYER" && playersReady) {
       let totalStep = index + (stone - 1);
       let stoneCount = stone;
 
